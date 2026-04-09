@@ -106,6 +106,3 @@ updates:
 
     allow:
       - dependency-type: "all"
-
-    # Active uniquement les updates sécurité
-    security-updates-only: true
