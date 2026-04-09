@@ -1,0 +1,111 @@
+version: 2
+
+updates:
+  # =========================
+  # NPM / NODE / ELECTRON
+  # =========================
+  - package-ecosystem: "npm"
+    directory: "/" 
+    schedule:
+      interval: "daily"
+      time: "04:00"
+      timezone: "Europe/Paris"
+
+    # Limiter le bruit mais rester réactif
+    open-pull-requests-limit: 10
+
+    # Gestion des versions
+    versioning-strategy: increase
+
+    # Labels auto
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "electron"
+
+    # Assignation auto
+    reviewers:
+      - "your-github-username"
+    assignees:
+      - "your-github-username"
+
+    # Commit message propre
+    commit-message:
+      prefix: "⬆️ deps"
+      include: "scope"
+
+    # Groupement intelligent
+    groups:
+      electron:
+        patterns:
+          - "electron"
+          - "electron-*"
+
+      dev-dependencies:
+        dependency-type: "development"
+
+      production-dependencies:
+        dependency-type: "production"
+
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+    # Ignorer certaines libs sensibles (exemple)
+    ignore:
+      - dependency-name: "electron"
+        update-types: ["version-update:semver-major"]
+
+    # Autoriser seulement certaines updates critiques
+    allow:
+      - dependency-type: "all"
+
+  # =========================
+  # GITHUB ACTIONS (CI/CD)
+  # =========================
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "03:00"
+      timezone: "Europe/Paris"
+
+    open-pull-requests-limit: 5
+
+    labels:
+      - "ci"
+      - "github-actions"
+
+    commit-message:
+      prefix: "⚙️ ci"
+
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # =========================
+  # OPTIONAL: SECURITY ONLY MODE
+  # =========================
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
+    # Seulement vulnérabilités
+    target-branch: "main"
+
+    labels:
+      - "security"
+      - "urgent"
+
+    commit-message:
+      prefix: "🚨 security"
+
+    allow:
+      - dependency-type: "all"
+
+    # Active uniquement les updates sécurité
+    security-updates-only: true
